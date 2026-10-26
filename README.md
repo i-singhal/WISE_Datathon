@@ -1,15 +1,58 @@
-# SecondLook — Same qualifications. Different decisions. Who notices?
-**Team WISE — IBM Z Datathon 2026 Project** (theme: Real-Time AI for Critical Decisions)
-IBM Z Datathon 2026. Advisory audit of historical HMDA decisions: finds denied applications with financially comparable approved ones, queues them for
-human review, and reports demographic patterns only as observed disparities (never proof of discrimination).
-## Run
-    python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
-    .venv/bin/python src/data/download.py && .venv/bin/python src/data/preprocess.py
-    .venv/bin/python -m src.models.run_matching && .venv/bin/python -m src.models.run_audit && .venv/bin/python -m src.models.run_eval
-    .venv/bin/python -m pytest tests
-    .venv/bin/streamlit run dashboard/app.py          # local; set SL_API_URL=http://<linuxone>:8000 for remote
-    .venv/bin/uvicorn src.api.main:app --port 8000
-Docs: `docs/`. Status: MVP works locally, Granite notes, Model Sensitivity Analysis, SHED and Census context are in, and the API is deployed on the LinuxONE VM; Granite notes, ablation model are pending.
+# SecondLook
+
+**Same qualifications. Different decisions. Who notices?**
+
+Team WISE · IBM Z Datathon 2026
+Theme: Real-Time AI for Critical Decisions
+
+SecondLook audits historical HMDA lending decisions. It finds denied applications with financially comparable approved applications, queues them for human review, and reports demographic patterns as observed disparities. These patterns are not proof of discrimination.
+
+## Explore the project
+
+- [Architecture](docs/architecture.md)
+- [Runbook](docs/runbook.md)
+- [Demo script](docs/demo_script.md)
+- [Model evaluation](docs/model_evaluation.md)
+- [Dataset methodology](docs/dataset_methodology.md)
+- [LinuxONE deployment evidence](docs/proof/linuxone_evidence.txt)
+- [Presentation](SecondLook%20-%20Team%20WISE.pdf)
+
+## Run locally
+
+From the repository root:
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+
+# Download and prepare the data.
+.venv/bin/python src/data/download.py
+.venv/bin/python src/data/preprocess.py
+
+# Run matching, auditing, and evaluation.
+.venv/bin/python -m src.models.run_matching
+.venv/bin/python -m src.models.run_audit
+.venv/bin/python -m src.models.run_eval
+
+# Run the test suite.
+.venv/bin/python -m pytest tests
+```
+
+Start the dashboard and API in separate terminals:
+
+```bash
+.venv/bin/streamlit run dashboard/app.py
+```
+
+```bash
+.venv/bin/uvicorn src.api.main:app --port 8000
+```
+
+For a remote API, set `SL_API_URL=http://<linuxone>:8000` before starting the dashboard. See the [runbook](docs/runbook.md) for deployment details.
+
+## Project status
+
+Project notes describe a working local MVP, an API deployed on LinuxONE, and model sensitivity analysis with SHED and Census context. An ablation model is listed as pending. See the linked runbook and evaluation documents for implementation and deployment details.
 
 ## Data sources and licences
 | Data | Source | Terms |
@@ -38,5 +81,3 @@ Docs: `docs/`. Status: MVP works locally, Granite notes, Model Sensitivity Analy
 | IBM Granite 4.0-H 350M base (IBM-provided in the container) | https://huggingface.co/ibm-granite | Apache-2.0 |
 | Mermaid (architecture diagram) | https://mermaid.js.org | MIT |
 All SecondLook code in `src/`, `dashboard/`, `scripts/`, `tests/` was written during the datathon window (first commit 2026-10-17); the IBM loan demo notebook was not reused.
-
-Slides: `docs/slides/SecondLook_Slides.pdf`. Docs: `docs/architecture.md`, `docs/runbook.md`, `docs/demo_script.md`, `docs/model_evaluation.md`, `docs/dataset_methodology.md`. LinuxONE evidence: `docs/proof/linuxone_evidence.txt`.
